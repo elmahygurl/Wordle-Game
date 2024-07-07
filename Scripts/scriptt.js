@@ -1,4 +1,9 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
+
+    async function checkWordExists(word) {
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
+        return response.ok;
+    }
     const gridElement = document.getElementById('grid');
     const keys = document.querySelectorAll('.key');
     const enterKey = document.getElementById('enter');
@@ -47,6 +52,13 @@
             tile.textContent = '';
         }
     }
+
+
+    async function checkWordExists(word) {
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
+        return response.ok;
+    }
+
     function handleEnter() {
         if (currentTile === wordLength) {
             checkWord();
@@ -61,13 +73,20 @@
         }
     }
 
-    function checkWord() {
+
+    async function checkWord() {
         let guessedWord = '';
         for (let i = 0; i < wordLength; i++) {
             guessedWord += grid[currentTrial][i];
         }
+        const wordExists = await checkWordExists(guessedWord);
+        if (wordExists) {
+            console.log("Word exists");  //why pause?
+        } else {
+            alert("Word doesnot exist");     
+        }
         let heute = todaysWord();
-        console.log(guessedWord);  ///check with today's word + check if in dictionary
+        console.log(guessedWord);  ///check with today's word 
         console.log(heute);
         if (heute==guessedWord) {
             alert("YAAYY you guessed it correctly!!");   //handle this - winning 
@@ -76,6 +95,8 @@
        
     }
 
+    
+
     keys.forEach(key => {
         key.addEventListener('click', () => {
             updateTile(key.textContent);
@@ -83,7 +104,6 @@
     });
 
     
-
     backspaceKey.addEventListener('click', handleBackspace);
     enterKey.addEventListener('click', handleEnter);
     draw();
