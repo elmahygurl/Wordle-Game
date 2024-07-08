@@ -82,7 +82,7 @@
     }
     function updateTile(letter) {
         if (currentTrial >= trials) {
-            alert("The word was " + heute + "\nBetter luck tomorrow");  //change later- handle the losing 
+            alert("The word was " + heute + "\nBetter luck tomorrow!");  
             return;
         }
         if (currentTile < wordLength) {
@@ -168,10 +168,9 @@
                             }
                         }
                     } else {
-                        console.log("The letter ", guessedLetter, "does not exist in the word");
+                        console.log("The letter ",guessedLetter, "does not exist in the word");
                         tile.classList.add('not-in-word');  
                         key.classList.add('not-in-word');
-
                     }
                 }
             }
@@ -179,12 +178,10 @@
                 alert("YAAYY you guessed it correctly!!\n Come back tomorrow 🙂");
                 return;
             }
-
             currentTrial++;
             currentTile = 0;
-
         } else if (currentTrial >= trials) {
-            alert("The word was " + heute + "\nBetter luck tomorrow");  //change later- handle the losing 
+            alert("The word was " + heute + "\nBetter luck tomorrow!");
             return;
         }
         else {
