@@ -69,3 +69,15 @@ body {
     background-color: #973131;
     color: white;
 }
+
+.correct {
+    background-color: green;
+}
+
+.out-of-place {
+    background-color: yellow;
+}
+
+.not-in-word {
+    background-color: grey;
+}

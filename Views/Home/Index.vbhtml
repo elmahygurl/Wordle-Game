@@ -13,37 +13,37 @@
         </div>
         <div id="keyboard">
             <div class="row">
-                <button class="key">Q</button>
-                <button class="key">W</button>
-                <button class="key">E</button>
-                <button class="key">R</button>
-                <button class="key">T</button>
-                <button class="key">Y</button>
-                <button class="key">U</button>
-                <button class="key">I</button>
-                <button class="key">O</button>
-                <button class="key">P</button>
+                <button class="key" data-state="0" data-key="Q">Q</button>
+                <button class="key" data-state="0" data-key="W">W</button>
+                <button class="key" data-state="0" data-key="E">E</button>
+                <button class="key" data-state="0" data-key="R">R</button>
+                <button class="key" data-state="0" data-key="T">T</button>
+                <button class="key" data-state="0" data-key="Y">Y</button>
+                <button class="key" data-state="0" data-key="U">U</button>
+                <button class="key" data-state="0" data-key="I">I</button>
+                <button class="key" data-state="0" data-key="O">O</button>
+                <button class="key" data-state="0" data-key="P">P</button>
             </div>
             <div class="row">
-                <button class="key">A</button>
-                <button class="key">S</button>
-                <button class="key">D</button>
-                <button class="key">F</button>
-                <button class="key">G</button>
-                <button class="key">H</button>
-                <button class="key">J</button>
-                <button class="key">K</button>
-                <button class="key">L</button>
+                <button class="key" data-state="0" data-key="A">A</button>
+                <button class="key" data-state="0" data-key="S">S</button>
+                <button class="key" data-state="0" data-key="D">D</button>
+                <button class="key" data-state="0" data-key="F">F</button>
+                <button class="key" data-state="0" data-key="G">G</button>
+                <button class="key" data-state="0" data-key="H">H</button>
+                <button class="key" data-state="0" data-key="J">J</button>
+                <button class="key" data-state="0" data-key="K">K</button>
+                <button class="key" data-state="0" data-key="L">L</button>
             </div>
             <div class="row">
                 <button id="enter">Enter</button>
-                <button class="key">Z</button>
-                <button class="key">X</button>
-                <button class="key">C</button>
-                <button class="key">V</button>
-                <button class="key">B</button>
-                <button class="key">N</button>
-                <button class="key">M</button>
+                <button class="key" data-state="0" data-key="Z">Z</button>
+                <button class="key" data-state="0" data-key="X">X</button>
+                <button class="key" data-state="0" data-key="C">C</button>
+                <button class="key" data-state="0" data-key="V">V</button>
+                <button class="key" data-state="0" data-key="B">B</button>
+                <button class="key" data-state="0" data-key="N">N</button>
+                <button class="key" data-state="0" data-key="M">M</button>
 
                 <button id="backspace">⌫</button>
             </div>
