@@ -5,21 +5,35 @@
     const enterKey = document.getElementById('enter');
     const backspaceKey = document.getElementById('backspace');
 
-    const trials = 6;
+    const MAX_TRIALS = 6;
     const wordLength = 5;
 
-    let grid = Array(trials).fill().map(() => Array(wordLength).fill(''));
+    let grid = Array(MAX_TRIALS).fill().map(() => Array(wordLength).fill(''));
     let currentTrial = 0;
     let currentTile = 0;
     //const wordList = [];
     let heute;
     let pastTrials = [];  //so loading gets previous trials 
+
     function loadGameState() {
+
         const savedState = localStorage.getItem('wordleGameState');
+
         if (savedState) {
+
             const state = JSON.parse(savedState);
-            if (state.date === new Date().toDateString() && state.trials >= trials) {
-                alert("Tomorrow is a new day with a new challenge!");
+
+            if (state.date === new Date().toDateString()) {
+                if (state.trials >= MAX_TRIALS) {
+                    alert("Tomorrow is a new day with a new challenge!");
+                    return false;
+                }
+                if (state.pastTrials) {
+
+                    pastTrials = state.pastTrials.slice(0, MAX_TRIALS); // Ensure pastTrials length matches trials
+                    renderPastTrials();
+                    currentTrial = pastTrials.length;
+                }
                 return true;
             }
         }
@@ -29,10 +43,11 @@
     function saveGameState() {
         const state = {
             date: new Date().toDateString(),
-            trials: currentTrial
+            trials: currentTrial,
+            //pastTrials: pastTrials
+            pastTrials: pastTrials.slice(0, MAX_TRIALS) // Limit pastTrials length to trials
         };
         localStorage.setItem('wordleGameState', JSON.stringify(state));
-        localStorage.set
     }
 
     async function getWordOfTheDay() {
@@ -65,7 +80,7 @@
     });
 
     function draw() {
-        for (let i = 0; i < trials; i++) {
+        for (let i = 0; i < MAX_TRIALS; i++) {
             for (let j = 0; j < wordLength; j++) {
                 const tile = document.createElement('div');
                 tile.classList.add('tile');
@@ -74,8 +89,10 @@
             }
         }
     }
+ 
     function updateTile(letter) {
-        if (currentTrial >= trials) {
+        
+        if (currentTrial >= MAX_TRIALS) {
             alert("The word was " + heute + "\nBetter luck tomorrow!");
             return;
         }
@@ -100,6 +117,7 @@
         return response.ok;
     }
     async function handleEnter() {
+
         if (currentTile === wordLength) {
             const guessedWord = grid[currentTrial].join('');
             const wordExists = await checkWordExists(guessedWord);
@@ -111,7 +129,11 @@
 
             const correctWord = heute.toUpperCase();
             let correctLetters = Array(wordLength).fill(false);
+
             pastTrials[currentTrial] = guessedWord;
+            renderPastTrials();
+            
+
             for (let j = 0; j < wordLength; j++) {
                 const guessedLetter = grid[currentTrial][j].toUpperCase();
                 const correctLetter = correctWord[j];
@@ -183,7 +205,7 @@
             currentTrial++;
             currentTile = 0;
             saveGameState();
-        } else if (currentTrial >= trials) {
+        } else if (currentTrial >= MAX_TRIALS) {
             alert("The word was " + heute + "\nBetter luck tomorrow!");
             saveGameState();
             return;
@@ -198,18 +220,41 @@
         console.log("3 - ", pastTrials[3])
         console.log("4 - ", pastTrials[4])
         console.log("5 - ", pastTrials[5])
+
+
     }
+ 
+    function renderPastTrials() {
+
+        for (let i = 0; i < MAX_TRIALS; i++) {
+
+            for (let j = 0; j < wordLength; j++) {
+                const tile = document.getElementById(`tile-${i}-${j}`);
+                if (pastTrials[i] && j < pastTrials[i].length) {
+                    tile.textContent = pastTrials[i][j];
+                } else {
+                    tile.textContent = '';
+                }
+            }
+        }
+    }
+
 
     keys.forEach(key => {
         key.addEventListener('click', () => {
             updateTile(key.textContent);
         });
+
     });
 
     backspaceKey.addEventListener('click', handleBackspace);
     enterKey.addEventListener('click', handleEnter);
     draw();
 
+    window.onload = function () {
+        loadGameState();
+        renderPastTrials(); 
+    };
 
 
 });
