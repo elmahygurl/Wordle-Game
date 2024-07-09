@@ -6,6 +6,12 @@
 
 <h1 style="text-align: center;  font-family: 'Brush Script MT'; color: crimson">Wordle Game</h1>
 
+<div class="popup" id="popp" onclick="popFunction()">
+    Click for instructions!
+    <span class="popuptext" id="myPopup">You get 6 chances to guess a 5-letter word.</span>
+</div>
+
+
 <body>
     <div class="container">
         <div class="container" style="display:flex">
@@ -51,4 +57,15 @@
     </div>
 
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const pop = document.getElementById('popp');
+        function popFunction() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+        }
+        pop.addEventListener('click', popFunction);
+    });
+</script>
 
