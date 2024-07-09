@@ -1,6 +1,5 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
-
     const gridElement = document.getElementById('grid');
     const keys = document.querySelectorAll('.key');
     const enterKey = document.getElementById('enter');
@@ -12,64 +11,35 @@
     let grid = Array(trials).fill().map(() => Array(wordLength).fill(''));
     let currentTrial = 0;
     let currentTile = 0;
-    const wordList = [
-        "MIGHT", "TRACE", "PLANT", "CHAMP", "SLICE",
-        "BRAVE", "CRANE", "GHOST", "RIVER", "SHINE",
-        "PLUMB", "SHEEP", "FROST", "BREAD", "TREAT",
-        "EMAIL", "NAIVE", "OPERA", "ABUSE", "NOISE",
-        "JUICE", "MOVIE", "SAUCE", "VIDEO", "OLIVE",
-        "GREEN", "SNACK", "LONER"
-    ];
-    //let heute;
-    //async function getWordOfToday() {
-    //    try {
-    //        console.log("in a function")
-    //        const response = await fetch('https://random-word-api.herokuapp.com/word?length=5');
-    //        const data = await response.json();
-    //        console.log("dataa", data)
+    const wordList = [];
+    let heute;
 
-    //        heute = data[0].toUpperCase();
-    //    } catch (error) {
-    //        console.error('Error fetching word:', error);
-    //        heute = 'MOVIE';
-    //    }
-        //try {
-        //    const response = await fetch('https://random-word-api.herokuapp.com/word?length=5');
-        //    if (!response.ok) {
-        //        throw new Error('Failed to fetch word');
-        //    }
-        //    const data = await response.json();
-        //    return data[0].toUpperCase();
-        //} catch (error) {
-        //    console.error('Error fetching word:', error);
-        //    const today = new Date();
-        //    const start = new Date(today.getFullYear(), 0, 0);
-        //    const diff = today - start;
-        //    const oneDay = 1000 * 60 * 60 * 24;
-        //    const dayOfYear = Math.floor(diff / oneDay);
-        //    const index = dayOfYear % wordList.length;
-        //    return wordList[index];
-  
-        //}
-    //}
-    //getWordOfToday();
-   
-
-    function getWordOfTheDay() {
-        const today = new Date();
-        const start = new Date(today.getFullYear(), 0, 0);
-        const diff = today - start;
-        const oneDay = 1000 * 60 * 60 * 24;
-        const dayOfYear = Math.floor(diff / oneDay);
-        const index = dayOfYear % wordList.length;
-        console.log("index:",index);
-        return wordList[index];
+    async function getWordOfTheDay() {
+        try {
+            const response = await fetch('sgb-words.txt');
+            if (!response.ok) {
+                throw new Error('Failed to fetch word list');
+            }
+            const text = await response.text();
+            const wordList = text.split('\n').map(word => word.trim().toUpperCase());
+            const today = new Date();
+            const start = new Date(today.getFullYear(), 0, 0);
+            const diff = today - start;
+            const oneDay = 1000 * 60 * 60 * 24;
+            const dayOfYear = Math.floor(diff / oneDay);
+            const index = dayOfYear % wordList.length;
+            return wordList[index];
+        } catch (error) {
+            console.error('Error fetching word list:', error);
+            return 'MOVIE';
+        }
     }
-
-    let heute = getWordOfTheDay();
-    console.log('Today\'s word is:', heute);
-    
-
+ 
+    getWordOfTheDay().then(word => {
+        heute = word;
+        console.log('Today\'s word is:', heute);
+    });
+       
     function draw() {
         for (let i = 0; i < trials; i++) {
             for (let j = 0; j < wordLength; j++) {
@@ -104,8 +74,7 @@
     async function checkWordExists(word) {
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
         return response.ok;
-    }
-
+    }   
     async function handleEnter() {
         if (currentTile === wordLength) {
             const guessedWord = grid[currentTrial].join('');
@@ -127,7 +96,7 @@
 
                 if (guessedLetter === correctLetter) {
                     tile.classList.add('correct');
-                    key.classList.remove('out-of-place');
+                    key.classList.remove('out-of-place','not-in-word');
                     key.dataset.state = "2";
                     key.classList.add('correct');
                     correctLetters[j] = true;
@@ -151,11 +120,15 @@
                         if (correctIndex !== -1 && !correctLetters[correctIndex]) {
                             tile.classList.add('out-of-place');
                             if (key.dataset.state == 2) {
+                                key.classList.remove('not-in-word', 'out-of-place');
+                                key.classList.add('correct');
                             }
                             else {
-                                key.dataset.state == 1;
+                                key.dataset.state = 1;
+                                key.classList.remove('not-in-word');
                                 key.classList.add('out-of-place');
                                 correctLetters[correctIndex] = true;
+                                console.log("key state now = ", key.dataset.state, " of guessed letterrrrr ", guessedLetter)
                             }
                         } else {
                             console.log("in the not in word")
@@ -164,13 +137,17 @@
                             
                             if (key.dataset.state <1) {
                                 key.classList.add('not-in-word');
-                                key.dataset.state = "0";
+                                key.dataset.state = 0;
                             }
                         }
                     } else {
                         console.log("The letter ",guessedLetter, "does not exist in the word");
-                        tile.classList.add('not-in-word');  
-                        key.classList.add('not-in-word');
+                        tile.classList.add('not-in-word');
+                        console.log("key state now = ", key.dataset.state, " of guessed letter ", guessedLetter)
+                            if (key.dataset.state <1) {
+                                key.classList.add('not-in-word');
+                                key.dataset.state = 0;
+                            }
                     }
                 }
             }
