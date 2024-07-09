@@ -6,9 +6,9 @@
 
 <h1 style="text-align: center;  font-family: 'Brush Script MT'; color: crimson">Wordle Game</h1>
 
-<div class="popup" id="popp" onclick="popFunction()">
+<div style="color: #102C57 " class="popup" id="popp" >
     Click for instructions!
-    <span class="popuptext" id="myPopup">You get 6 chances to guess a 5-letter word.</span>
+    <span class="popuptext" id="myPopup">You get 6 chances to guess a 5-letter word!</span>
 </div>
 
 
