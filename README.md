@@ -15,7 +15,7 @@ The game selects a word of the day and allows players to guess the word within s
 - Prevents guessing once the word is correctly guessed or trials are exhausted.
 
 ## Example 
-![image]()
+![image](https://github.com/elmahygurl/Wordle-Game/blob/master/example.JPG)
 
 ## Getting Started
 
