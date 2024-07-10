@@ -45,7 +45,7 @@
             date: new Date().toDateString(),
             trials: currentTrial,
             //pastTrials: pastTrials
-            pastTrials: pastTrials.slice(0, MAX_TRIALS) // limit pastTrials length to trials
+            pastTrials: pastTrials.slice(0, MAX_TRIALS) //limit pastTrials length to trials
         };
         localStorage.setItem('wordleGameState', JSON.stringify(state));
     }
@@ -192,6 +192,7 @@
     function isCorrect(guess) {
         if (guess.toUpperCase() === heute.toUpperCase()) {
             alert("YAAYY you guessed it correctly!!\n Come back tomorrow 🙂");
+            currentTrial=6;
             saveGameState();
             return true;
         }
@@ -221,133 +222,14 @@
             currentTile = 0;
             saveGameState();
         } else if (currentTrial >= MAX_TRIALS) {
-            alert("The word was " + heute + "\nBetter luck tomorrow!");
+            alert("The word was " + heute + "\nCome back tomorrow!");
             saveGameState();
             return;
         } else {
             alert("Not enough letters");
         }
     }
-    //function isCorrect(guess) {  //takes guessed word as a whole and correct word el fel system enhrda
-    //    if (guess.toUpperCase() === heute.toUpperCase()) {
-    //        alert("YAAYY you guessed it correctly!!\n Come back tomorrow 🙂");
-    //        saveGameState();
-    //        return false;
-    //    }
-    //}
-    //async function handleEnter() {
-
-    //    if (currentTile === wordLength) {
-    //        const guessedWord = grid[currentTrial].join('');
-    //        const wordExists = await checkWordExists(guessedWord);
-
-    //        if (!wordExists) {
-    //            alert("Word does not exist");
-    //            return;
-    //        }
-
-            
-    //        //let correctLetters = Array(wordLength).fill(false);
-
-    //        pastTrials[currentTrial] = guessedWord;
-    //        // renderPastTrials();
-
-    //        //<----------------------------------------------------------------------------------------------------->
-    //        //for (let j = 0; j < wordLength; j++) {
-    //        //    const guessedLetter = grid[currentTrial][j].toUpperCase();
-    //        //    const correctLetter = correctWord[j];
-    //        //    const tile = document.getElementById(`tile-${currentTrial}-${j}`);
-    //        //    const key = document.querySelector(`.key[data-key="${guessedLetter}"]`);
-
-    //        //    if (guessedLetter === correctLetter) {
-    //        //        tile.classList.add('correct');
-    //        //        key.classList.remove('out-of-place', 'not-in-word');
-    //        //        key.dataset.state = "2";
-    //        //        key.classList.add('correct');
-    //        //        correctLetters[j] = true;
-    //        //    }
-    //        //}
-    //        checkCorrect();
-    //       //<----------------------------------------------------------------------------------------------------->
-    //        //for (let j = 0; j < wordLength; j++) {
-    //        //    const guessedLetter = grid[currentTrial][j].toUpperCase();
-    //        //    const tile = document.getElementById(`tile-${currentTrial}-${j}`);
-    //        //    const key = document.querySelector(`.key[data-key="${guessedLetter}"]`);
-
-    //        //    if (!tile.classList.contains('correct')) {
-    //        //        if (correctWord.includes(guessedLetter)) {
-    //        //            let correctIndex = correctWord.indexOf(guessedLetter);
-    //        //            console.log("Correct index of ", guessedLetter, "is", correctIndex);
-    //        //            while (correctLetters[correctIndex]) {
-    //        //                console.log(" bnd5ol hena at ", guessedLetter);
-    //        //                correctIndex = correctWord.indexOf(guessedLetter, correctIndex + 1);
-    //        //                if (correctIndex === -1) break;
-    //        //            }
-    //        //            if (correctIndex !== -1 && !correctLetters[correctIndex]) {
-    //        //                tile.classList.add('out-of-place');
-    //        //                if (key.dataset.state == 2) {
-    //        //                    key.classList.remove('not-in-word', 'out-of-place');
-    //        //                    key.classList.add('correct');
-    //        //                }
-    //        //                else {
-    //        //                    key.dataset.state = 1;
-    //        //                    key.classList.remove('not-in-word');
-    //        //                    key.classList.add('out-of-place');
-    //        //                    correctLetters[correctIndex] = true;
-    //        //                    console.log("key state now = ", key.dataset.state, " of guessed letterrrrr ", guessedLetter)
-    //        //                }
-    //        //            } else {
-    //        //                console.log("in the not in word")
-    //        //                tile.classList.remove('correct');
-    //        //                tile.classList.add('not-in-word');
-
-    //        //                if (key.dataset.state < 1) {
-    //        //                    key.classList.add('not-in-word');
-    //        //                    key.dataset.state = 0;
-    //        //                }
-    //        //            }
-    //        //        } else {
-    //        //            console.log("The letter ", guessedLetter, "does not exist in the word");
-    //        //            tile.classList.add('not-in-word');
-    //        //            console.log("key state now = ", key.dataset.state, " of guessed letter ", guessedLetter)
-    //        //            if (key.dataset.state < 1) {
-    //        //                key.classList.add('not-in-word');
-    //        //                key.dataset.state = 0;
-    //        //            }
-    //        //        }
-    //        //    }
-    //        //}
-    //        checkOther();
-    //        //< ----------------------------------------------------------------------------------------------------- >
-    //        //if (guessedWord.toUpperCase() === correctWord) {
-    //        //    alert("YAAYY you guessed it correctly!!\n Come back tomorrow 🙂");
-    //        //    saveGameState();
-    //        //    return;
-    //        //}
-    //        if (!isCorrect(guessedWord))   //
-    //            return;                 
-    //        //< ----------------------------------------------------------------------------------------------------- >
-    //        currentTrial++;
-    //        currentTile = 0;
-    //        saveGameState();
-    //    } else if (currentTrial >= MAX_TRIALS) {
-    //        alert("The word was " + heute + "\nBetter luck tomorrow!");
-    //        saveGameState();
-    //        return;
-    //    }
-    //    else {
-    //        alert("Not enough letters");
-    //    }
-
-    //    //console.log("0 - ", pastTrials[0])
-    //    //console.log("1 - ", pastTrials[1])
-    //    //console.log("2 - ", pastTrials[2])
-    //    //console.log("3 - ", pastTrials[3])
-    //    //console.log("4 - ", pastTrials[4])
-    //    //console.log("5 - ", pastTrials[5])
-
-    //}
- 
+    
     function renderPastTrials() {
         for (let i = 0; i < pastTrials.length; i++) {
             currentTrial = i;
@@ -374,10 +256,6 @@
     enterKey.addEventListener('click', handleEnter);
     draw();
 
-    //window.onload = function () {
-    //    loadGameState();
-    //    renderPastTrials(); 
-    //};
 
 
 });
