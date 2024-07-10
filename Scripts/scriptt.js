@@ -9,11 +9,12 @@
     const wordLength = 5;
 
     let grid = Array(MAX_TRIALS).fill().map(() => Array(wordLength).fill(''));
-    let currentTrial = 0;
+    let currentTrial =0;
     let currentTile = 0;
     //const wordList = [];
     let heute;
     let pastTrials = [];  //so loading gets previous trials 
+    let state;
 
     function loadGameState() {
 
@@ -25,14 +26,15 @@
 
             if (state.date === new Date().toDateString()) {
                 if (state.trials >= MAX_TRIALS) {
+                    currentTrial = 6;
                     alert("Tomorrow is a new day with a new challenge!");
                     //return false;
                 }
                 if (state.pastTrials) {
 
-                    pastTrials = state.pastTrials.slice(0, MAX_TRIALS); // Ensure pastTrials length matches trials
+                    pastTrials = state.pastTrials.slice(0, MAX_TRIALS); 
                     renderPastTrials();
-                    currentTrial = pastTrials.length;
+                    currentTrial = state.trials;
                 }
                 return true;
             }
@@ -73,7 +75,7 @@
 
     getWordOfTheDay().then(word => {
         heute = word;
-        console.log('Today\'s word is:', heute);
+        //console.log('Today\'s word is:', heute);
         if (loadGameState()) {
             return;
         }
@@ -93,7 +95,7 @@
     function updateTile(letter) {
         
         if (currentTrial >= MAX_TRIALS) {
-            alert("The word was " + heute + "\nBetter luck tomorrow!");
+            alert("The word was " + heute + "\nCome back tomorrow!");
             return;
         }
         if (currentTile < wordLength) {
@@ -119,7 +121,7 @@
 
     
     //------------------------------------------------------------------------------- NEW
-    let correctLetters = Array(wordLength).fill(false);
+    let correctLetters = '';
     function checkCorrect() {    
         const correctWord = heute.toUpperCase();
         for (let j = 0; j < wordLength; j++) {
@@ -148,9 +150,12 @@
             if (!tile.classList.contains('correct')) {
                 if (correctWord.includes(guessedLetter)) {
                     let correctIndex = correctWord.indexOf(guessedLetter);
-                    console.log("Correct index of ", guessedLetter, "is", correctIndex);
+                    //console.log("Correct index of ", guessedLetter, "is", correctIndex, "but its current index is ", j);
+                    //console.log("correctletters of j ", j, " is ", correctLetters[j])
+                    //console.log("correctletters of correctIndex= ", correctIndex, " is ", correctLetters[correctIndex])
+
                     while (correctLetters[correctIndex]) {
-                        console.log(" bnd5ol hena at ", guessedLetter);
+                        //console.log(" bnd5ol hena at ", guessedLetter, "with correctIndex", correctIndex, " value = ", correctLetters[correctIndex]);
                         correctIndex = correctWord.indexOf(guessedLetter, correctIndex + 1);
                         if (correctIndex === -1) break;
                     }
@@ -164,11 +169,11 @@
                             key.dataset.state = 1;
                             key.classList.remove('not-in-word');
                             key.classList.add('out-of-place');
-                            correctLetters[correctIndex] = true;
-                            console.log("key state now = ", key.dataset.state, " of guessed letterrrrr ", guessedLetter)
+                            correctLetters[correctIndex] = true;     //---here  -- true originally to handle doubles extra
+                            //console.log("key state now = ", key.dataset.state, " of guessed letterrrrr ", guessedLetter)
                         }
                     } else {
-                        console.log("in the not in word")
+                        //console.log("in the not in word")
                         tile.classList.remove('correct');
                         tile.classList.add('not-in-word');
 
@@ -178,9 +183,9 @@
                         }
                     }
                 } else {
-                    console.log("The letter ", guessedLetter, "does not exist in the word");
+                    //console.log("The letter ", guessedLetter, "does not exist in the word");
                     tile.classList.add('not-in-word');
-                    console.log("key state now = ", key.dataset.state, " of guessed letter ", guessedLetter)
+                    //console.log("key state now = ", key.dataset.state, " of guessed letter ", guessedLetter)
                     if (key.dataset.state < 1) {
                         key.classList.add('not-in-word');
                         key.dataset.state = 0;
@@ -189,6 +194,7 @@
             }
         }
     }
+    
     function isCorrect(guess) {
         if (guess.toUpperCase() === heute.toUpperCase()) {
             alert("YAAYY you guessed it correctly!!\n Come back tomorrow 🙂");
@@ -200,9 +206,15 @@
     }
 
     async function handleEnter() {
-        if (currentTile === wordLength) {
+        if (currentTrial >= MAX_TRIALS) {
+            alert("The word was " + heute + "\nCome back tomorrow!");
+            saveGameState();
+            return;
+        }
+        else if (currentTile === wordLength) {
             const guessedWord = grid[currentTrial].join('');
             const wordExists = await checkWordExists(guessedWord);
+            correctLetters = Array(wordLength).fill(false);
 
             if (!wordExists) {
                 alert("Word does not exist");
@@ -213,6 +225,7 @@
 
             checkCorrect();
             checkOther();
+            
 
             if (isCorrect(guessedWord)) {
                 return;
@@ -221,16 +234,13 @@
             currentTrial++;
             currentTile = 0;
             saveGameState();
-        } else if (currentTrial >= MAX_TRIALS) {
-            alert("The word was " + heute + "\nCome back tomorrow!");
-            saveGameState();
-            return;
         } else {
             alert("Not enough letters");
         }
     }
     
     function renderPastTrials() {
+        
         for (let i = 0; i < pastTrials.length; i++) {
             currentTrial = i;
             currentTile = 0;
@@ -241,13 +251,21 @@
             checkOther();
             currentTile = 0;
         }
-        currentTrial = pastTrials.length;
+          currentTrial = pastTrials.length;
+        
     }
 
 
     keys.forEach(key => {
         key.addEventListener('click', () => {
-            updateTile(key.textContent);
+            if (currentTrial < MAX_TRIALS ) {
+                updateTile(key.textContent)
+            }
+            else {
+                //console.log("WE OUT ")
+                alert("Come back tomorrow")
+            }
+           
         });
 
     });
